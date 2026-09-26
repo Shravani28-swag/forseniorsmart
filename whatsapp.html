@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WhatsApp — SeniorSmart</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1f2a24;--paper:#f6f2e9;--teal:#22515a;--teal-dark:#163a41;--gold:#c9922a;--card:#ffffff;--muted:#5c6b63;--radius:14px;--fs:18px;}
+body.dark{--ink:#eef0ee;--paper:#132320;--card:#1c322e;--muted:#a9b7b0;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--paper);color:var(--ink);font-family:'Source Sans 3',sans-serif;font-size:var(--fs);line-height:1.6;transition:background .3s,color .3s;}
+h1,h2,h3{font-family:'Fraunces',serif;font-weight:700;}
+header{background:var(--teal);color:#fdf9ef;padding:16px 5%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;border-bottom:3px solid var(--gold);flex-wrap:wrap;gap:10px;}
+.brand{display:flex;align-items:center;gap:12px;}
+.brand i{font-size:26px;color:var(--gold);}
+.brand a{color:#fdf9ef;text-decoration:none;font-weight:700;font-size:18px;}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.toolbar select,.toolbar button{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#fdf9ef;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:14px;}
+.toolbar button:hover,.toolbar select:hover{background:rgba(255,255,255,.25);}
+.toolbar button:focus-visible,.toolbar select:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:2px;}
+main{max-width:820px;margin:0 auto;padding:40px 6% 80px;}
+.page-title{font-size:32px;margin-bottom:6px;}
+.page-sub{color:var(--muted);margin-bottom:30px;}
+.video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--radius);margin-bottom:16px;border:3px solid var(--gold);background:#0e1e1c;}
+.video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;}
+.video-note{font-size:13px;color:var(--muted);margin-bottom:40px;}
+.lesson{background:var(--card);border-radius:var(--radius);padding:24px;margin-bottom:20px;border-left:5px solid var(--teal);display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:center;}
+.lesson img{width:100%;border-radius:10px;display:block;background:#dfe6e2;}
+.lesson h3{font-size:19px;margin-bottom:6px;}
+.lesson p{color:var(--muted);font-size:15px;margin-bottom:6px;}
+.lesson .num{color:var(--gold);font-weight:700;font-family:'Fraunces',serif;font-size:14px;margin-bottom:4px;}
+.tip{font-size:14px;background:rgba(34,81,90,.08);border-radius:8px;padding:8px 12px;margin-top:8px;}
+body.dark .tip{background:rgba(201,146,42,.1);}
+.tip i{color:var(--gold);margin-right:6px;}
+@media(max-width:600px){.lesson{grid-template-columns:1fr;}}
+.back{display:inline-block;margin-top:20px;color:var(--teal);font-weight:600;text-decoration:none;}
+body.dark .back{color:var(--gold);}
+.nav-footer{display:flex;justify-content:space-between;align-items:center;margin-top:36px;gap:12px;flex-wrap:wrap;}
+.nav-link{display:flex;flex-direction:column;text-decoration:none;padding:14px 18px;border-radius:12px;background:var(--card);border:2px solid rgba(0,0,0,.08);color:var(--ink);max-width:45%;}
+body.dark .nav-link{border-color:rgba(255,255,255,.1);}
+.nav-link:hover{border-color:var(--teal);}
+.nav-link.next{text-align:right;margin-left:auto;}
+.nav-link small{color:var(--muted);font-size:12px;}
+.nav-link strong{font-size:15px;}
+.nav-home{text-align:center;display:block;margin-top:14px;color:var(--teal);font-weight:600;text-decoration:none;font-size:14px;}
+body.dark .nav-home{color:var(--gold);}
+.demo-box{background:var(--card);border:2px dashed var(--gold);border-radius:var(--radius);padding:26px;margin-bottom:40px;}
+.demo-box h4{font-size:16px;margin-bottom:14px;color:var(--muted);text-align:center;}
+.chat-window{background:#e9ddc8;border-radius:12px;padding:14px;min-height:110px;display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.chat-bubble{background:#dcf8c6;padding:8px 12px;border-radius:10px;align-self:flex-end;max-width:75%;font-size:14px;color:#222;}
+.chat-row{display:flex;gap:8px;}
+.chat-row input{flex:1;padding:12px;border-radius:8px;border:2px solid rgba(0,0,0,.15);font-size:15px;}
+.chat-row button{background:#22515a;color:#fff;border:none;padding:0 18px;border-radius:8px;cursor:pointer;font-size:16px;}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><i class="fa-solid fa-compass"></i><a href="index.html">SeniorSmart</a></div>
+  <div class="toolbar">
+    <select id="langSelect" aria-label="Language">
+      <option value="en">English</option>
+      <option value="mr">मराठी</option>
+      <option value="hi">हिन्दी</option>
+    </select>
+    <button onclick="changeFont(-1)" aria-label="Decrease text size"><i class="fa-solid fa-minus"></i></button>
+    <button onclick="changeFont(1)" aria-label="Increase text size"><i class="fa-solid fa-plus"></i></button>
+    <button onclick="speakPage()" aria-label="Read page aloud"><i class="fa-solid fa-volume-high"></i></button>
+    <button onclick="toggleDark()" aria-label="Toggle dark mode"><i class="fa-solid fa-moon"></i></button>
+  </div>
+</header>
+
+<main>
+  <h1 class="page-title" data-i18n="title">WhatsApp</h1>
+  <p class="page-sub" data-i18n="sub">Chat, share photos and make video calls with the people you care about.</p>
+
+  <div class="video-wrap">
+    <iframe src="https://www.youtube.com/embed/UrK58m-skM4" allowfullscreen title="WhatsApp basics video"></iframe>
+  </div>
+  <p class="video-note" data-i18n="video_note">Pick a video on YouTube, click Share → Embed, and replace VIDEO_ID above with the code it gives you.</p>
+
+  <div class="lesson">
+    <img src="whatsappopen.jpeg" alt="Opening the WhatsApp app on a smartphone">
+    <div>
+      <p class="num" data-i18n="l1n">Lesson 1</p>
+      <h3 data-i18n="l1h">Opening WhatsApp</h3>
+      <p data-i18n="l1p">Tap the green speech-bubble icon on your home screen to open the app.</p>
+      <div class="tip"><i class="fa-solid fa-lightbulb"></i><span data-i18n="l1t">If you can't find it, swipe down on the home screen and type "WhatsApp" to search.</span></div>
+    </div>
+  </div>
+
+  <div class="lesson">
+    <img src="whatsappchat.jpeg" alt="Starting a new chat in WhatsApp">
+    <div>
+      <p class="num" data-i18n="l2n">Lesson 2</p>
+      <h3 data-i18n="l2h">Starting a chat</h3>
+      <p data-i18n="l2p">Tap the round button with a pencil or "+", choose a contact, and type your message.</p>
+      <div class="tip"><i class="fa-solid fa-lightbulb"></i><span data-i18n="l2t">Only people already saved in your phone's contacts will show up in the list.</span></div>
+    </div>
+  </div>
+
+  <div class="lesson">
+    <img src="whatsappsend.png" alt="Sending a photo in a WhatsApp chat">
+    <div>
+      <p class="num" data-i18n="l3n">Lesson 3</p>
+      <h3 data-i18n="l3h">Sending photos</h3>
+      <p data-i18n="l3p">In a chat, tap the paperclip or camera icon, then choose a photo or take a new one.</p>
+      <div class="tip"><i class="fa-solid fa-lightbulb"></i><span data-i18n="l3t">You can send several photos at once by tapping more than one before sending.</span></div>
+    </div>
+  </div>
+
+  <div class="lesson">
+    <img src="whatsapplesson4.jpeg" alt="Making a video call in WhatsApp">
+    <div>
+      <p class="num" data-i18n="l4n">Lesson 4</p>
+      <h3 data-i18n="l4h">Making a video call</h3>
+      <p data-i18n="l4p">Open the chat with that person and tap the small video camera icon at the top.</p>
+      <div class="tip"><i class="fa-solid fa-lightbulb"></i><span data-i18n="l4t">Make sure you're connected to Wi-Fi so the call doesn't use too much mobile data.</span></div>
+    </div>
+  </div>
+
+  <div class="lesson">
+    <img src="whatsapplesson5.jpeg" alt="Recording a voice message in WhatsApp">
+    <div>
+      <p class="num" data-i18n="l5n">Lesson 5</p>
+      <h3 data-i18n="l5h">Sending a voice message</h3>
+      <p data-i18n="l5p">Press and hold the microphone icon, speak, then let go to send.</p>
+      <div class="tip"><i class="fa-solid fa-lightbulb"></i><span data-i18n="l5t">If you let go too early it may not send — slide your finger up while holding to lock it in place instead.</span></div>
+    </div>
+  </div>
+
+  <div class="demo-box">
+    <h4><i class="fa-solid fa-gamepad"></i> Try it yourself — type a message and press send</h4>
+    <div class="chat-window" id="chatWindow"></div>
+    <div class="chat-row">
+      <input type="text" id="chatInput" placeholder="Type a message..." maxlength="40">
+      <button onclick="sendDemoMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <div class="nav-footer">
+    <a class="nav-link" href="smartphone.html" onclick="markDone()"><small>← Previous</small><strong>Smartphone Basics</strong></a>
+    <a class="nav-link next" href="payments.html" onclick="markDone()"><small>Next →</small><strong>Digital Payments</strong></a>
+  </div>
+  <a class="nav-home" href="index.html" onclick="markDone()">All Topics</a>
+</main>
+
+<script>
+const translations = {
+  en:{title:"WhatsApp",sub:"Chat, share photos and make video calls with the people you care about.",
+    video_note:"Pick a video on YouTube, click Share → Embed, and replace VIDEO_ID above with the code it gives you.",
+    l1n:"Lesson 1",l1h:"Opening WhatsApp",l1p:"Tap the green speech-bubble icon on your home screen to open the app.",l1t:"If you can't find it, swipe down on the home screen and type \"WhatsApp\" to search.",
+    l2n:"Lesson 2",l2h:"Starting a chat",l2p:"Tap the round button with a pencil or \"+\", choose a contact, and type your message.",l2t:"Only people already saved in your phone's contacts will show up in the list.",
+    l3n:"Lesson 3",l3h:"Sending photos",l3p:"In a chat, tap the paperclip or camera icon, then choose a photo or take a new one.",l3t:"You can send several photos at once by tapping more than one before sending.",
+    l4n:"Lesson 4",l4h:"Making a video call",l4p:"Open the chat with that person and tap the small video camera icon at the top.",l4t:"Make sure you're connected to Wi-Fi so the call doesn't use too much mobile data.",
+    l5n:"Lesson 5",l5h:"Sending a voice message",l5p:"Press and hold the microphone icon, speak, then let go to send.",l5t:"If you let go too early it may not send — slide your finger up while holding to lock it in place instead.",
+    back:"← Back to all topics"},
+  mr:{title:"व्हॉट्सअॅप",sub:"तुमच्या आवडत्या लोकांशी चॅट, फोटो शेअर आणि व्हिडिओ कॉल करा.",
+    video_note:"YouTube वर व्हिडिओ निवडा, Share → Embed वर क्लिक करा, आणि वरील VIDEO_ID बदला.",
+    l1n:"धडा १",l1h:"व्हॉट्सअॅप उघडणे",l1p:"होम स्क्रीनवरील हिरव्या स्पीच-बबल आयकॉनवर टॅप करा.",l1t:"न सापडल्यास होम स्क्रीनवर खाली स्वाइप करून \"WhatsApp\" शोधा.",
+    l2n:"धडा २",l2h:"चॅट सुरू करणे",l2p:"पेन्सिल किंवा \"+\" असलेल्या गोल बटणावर टॅप करा, संपर्क निवडा, मेसेज टाइप करा.",l2t:"फक्त फोनमध्ये सेव्ह असलेले संपर्क यादीत दिसतील.",
+    l3n:"धडा ३",l3h:"फोटो पाठवणे",l3p:"चॅटमध्ये पेपरक्लिप किंवा कॅमेरा आयकॉनवर टॅप करा, फोटो निवडा किंवा नवीन काढा.",l3t:"पाठवण्यापूर्वी एकापेक्षा जास्त फोटो निवडून एकाच वेळी पाठवू शकता.",
+    l4n:"धडा ४",l4h:"व्हिडिओ कॉल करणे",l4p:"त्या व्यक्तीची चॅट उघडा आणि वरील छोट्या व्हिडिओ कॅमेरा आयकॉनवर टॅप करा.",l4t:"जास्त मोबाइल डेटा वापरू नये म्हणून वाय-फायशी जोडलेले असल्याची खात्री करा.",
+    l5n:"धडा ५",l5h:"व्हॉइस मेसेज पाठवणे",l5p:"मायक्रोफोन आयकॉन दाबून धरा, बोला, नंतर सोडून द्या.",l5t:"लवकर सोडल्यास पाठवला जाणार नाही — धरून ठेवत बोट वर सरकवा म्हणजे तो लॉक होईल.",
+    back:"← सर्व विषयांकडे परत"},
+  hi:{title:"व्हाट्सएप",sub:"अपने प्रियजनों के साथ चैट करें, फोटो भेजें और वीडियो कॉल करें.",
+    video_note:"YouTube पर वीडियो चुनें, Share → Embed दबाएं, और ऊपर VIDEO_ID बदलें.",
+    l1n:"पाठ 1",l1h:"व्हाट्सएप खोलना",l1p:"होम स्क्रीन पर हरे स्पीच-बबल आइकॉन पर टैप करें.",l1t:"न मिले तो होम स्क्रीन पर नीचे स्वाइप करके \"WhatsApp\" खोजें.",
+    l2n:"पाठ 2",l2h:"चैट शुरू करना",l2p:"पेंसिल या \"+\" वाले गोल बटन पर टैप करें, संपर्क चुनें, संदेश लिखें.",l2t:"केवल आपके फोन में सेव किए गए संपर्क सूची में दिखेंगे.",
+    l3n:"पाठ 3",l3h:"फोटो भेजना",l3p:"चैट में पेपरक्लिप या कैमरा आइकॉन पर टैप करें, फोटो चुनें या नई खींचें.",l3t:"भेजने से पहले एक से ज़्यादा फोटो चुनकर एक साथ भेज सकते हैं.",
+    l4n:"पाठ 4",l4h:"वीडियो कॉल करना",l4p:"उस व्यक्ति की चैट खोलें और ऊपर छोटे वीडियो कैमरा आइकॉन पर टैप करें.",l4t:"ज़्यादा मोबाइल डेटा न लगे इसलिए वाई-फाई से जुड़े होने की पुष्टि करें.",
+    l5n:"पाठ 5",l5h:"वॉइस मैसेज भेजना",l5p:"माइक्रोफोन आइकॉन दबाकर रखें, बोलें, फिर छोड़ दें.",l5t:"जल्दी छोड़ने पर नहीं भेजेगा — दबाए रखते हुए ऊँगली ऊपर सरकाएं ताकि वह लॉक हो जाए.",
+    back:"← सभी विषयों पर वापस जाएं"}
+};
+
+function applyLang(lang){
+  const dict = translations[lang] || translations.en;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if(dict[key]) el.innerHTML = dict[key];
+  });
+  localStorage.setItem('ss_lang', lang);
+}
+document.getElementById('langSelect').addEventListener('change', e=>applyLang(e.target.value));
+
+function markDone(){
+  localStorage.setItem('ss_done_whatsapp', 'true');
+}
+
+function sendDemoMessage(){
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if(!text) return;
+  const win = document.getElementById('chatWindow');
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-bubble';
+  bubble.textContent = text;
+  win.appendChild(bubble);
+  win.scrollTop = win.scrollHeight;
+  input.value = '';
+}
+
+let fontStep = 0;
+function changeFont(dir){
+  fontStep = Math.max(-2, Math.min(4, fontStep+dir));
+  document.documentElement.style.setProperty('--fs', (18+fontStep*2)+'px');
+}
+function toggleDark(){
+  document.body.classList.toggle('dark');
+  localStorage.setItem('ss_dark', document.body.classList.contains('dark'));
+}
+function speakPage(){
+  if(!('speechSynthesis' in window)) return alert('Speech not supported on this device.');
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(document.querySelector('main').innerText);
+  speechSynthesis.speak(u);
+}
+window.addEventListener('load', ()=>{
+  if(localStorage.getItem('ss_dark')==='true') document.body.classList.add('dark');
+  const savedLang = localStorage.getItem('ss_lang');
+  if(savedLang){ document.getElementById('langSelect').value = savedLang; applyLang(savedLang); }
+});
+</script>
+</body>
+</html>

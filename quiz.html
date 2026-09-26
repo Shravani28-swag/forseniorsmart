@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quick Quiz — SeniorSmart</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1f2a24;--paper:#f6f2e9;--teal:#22515a;--teal-dark:#163a41;--gold:#c9922a;--card:#ffffff;--muted:#5c6b63;--radius:14px;--fs:18px;--good:#2f7d4f;--bad:#b43c28;}
+body.dark{--ink:#eef0ee;--paper:#132320;--card:#1c322e;--muted:#a9b7b0;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--paper);color:var(--ink);font-family:'Source Sans 3',sans-serif;font-size:var(--fs);line-height:1.6;transition:background .3s,color .3s;}
+h1,h2,h3{font-family:'Fraunces',serif;font-weight:700;}
+header{background:var(--teal);color:#fdf9ef;padding:16px 5%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;border-bottom:3px solid var(--gold);flex-wrap:wrap;gap:10px;}
+.brand{display:flex;align-items:center;gap:12px;}
+.brand i{font-size:26px;color:var(--gold);}
+.brand a{color:#fdf9ef;text-decoration:none;font-weight:700;font-size:18px;}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.toolbar button{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#fdf9ef;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:14px;}
+.toolbar button:hover{background:rgba(255,255,255,.25);}
+.toolbar button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:2px;}
+main{max-width:700px;margin:0 auto;padding:40px 6% 80px;}
+.page-title{font-size:32px;margin-bottom:6px;}
+.page-sub{color:var(--muted);margin-bottom:30px;}
+.progress-bar{height:10px;background:rgba(0,0,0,.08);border-radius:6px;overflow:hidden;margin-bottom:30px;}
+body.dark .progress-bar{background:rgba(255,255,255,.08);}
+.progress-fill{height:100%;background:var(--gold);width:0%;transition:width .3s;}
+.card{background:var(--card);border-radius:var(--radius);padding:30px;border-left:5px solid var(--teal);}
+.q-count{color:var(--gold);font-weight:700;font-size:14px;margin-bottom:8px;}
+.q-text{font-size:22px;margin-bottom:22px;}
+.option{display:block;width:100%;text-align:left;background:transparent;border:2px solid rgba(0,0,0,.12);color:var(--ink);padding:14px 16px;border-radius:10px;margin-bottom:12px;font-size:16px;cursor:pointer;transition:all .2s;}
+body.dark .option{border-color:rgba(255,255,255,.15);}
+.option:hover{border-color:var(--teal);}
+.option.correct{border-color:var(--good);background:rgba(47,125,79,.12);}
+.option.incorrect{border-color:var(--bad);background:rgba(180,60,40,.12);}
+.option:disabled{cursor:default;}
+.feedback{margin-top:14px;font-size:15px;padding:12px 14px;border-radius:8px;background:rgba(34,81,90,.08);display:none;}
+body.dark .feedback{background:rgba(201,146,42,.1);}
+.next-btn{margin-top:20px;width:100%;padding:14px;background:var(--teal);color:#fdf9ef;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;display:none;}
+.next-btn:hover{background:var(--teal-dark);}
+.result{text-align:center;padding:40px 20px;}
+.result i{font-size:50px;color:var(--gold);margin-bottom:14px;}
+.result h2{font-size:28px;margin-bottom:10px;}
+.result p{color:var(--muted);margin-bottom:24px;}
+.restart-btn{padding:14px 26px;background:var(--gold);color:var(--teal-dark);border:none;border-radius:10px;font-weight:700;font-size:16px;cursor:pointer;}
+.restart-btn:hover{background:#dba53f;}
+.back{display:inline-block;margin-top:24px;color:var(--teal);font-weight:600;text-decoration:none;}
+body.dark .back{color:var(--gold);}
+.hidden{display:none;}
+.nav-footer{display:flex;justify-content:space-between;align-items:center;margin-top:36px;gap:12px;flex-wrap:wrap;}
+.nav-link{display:flex;flex-direction:column;text-decoration:none;padding:14px 18px;border-radius:12px;background:var(--card);border:2px solid rgba(0,0,0,.08);color:var(--ink);max-width:45%;}
+body.dark .nav-link{border-color:rgba(255,255,255,.1);}
+.nav-link:hover{border-color:var(--teal);}
+.nav-link.next{text-align:right;margin-left:auto;}
+.nav-link small{color:var(--muted);font-size:12px;}
+.nav-link strong{font-size:15px;}
+.nav-home{text-align:center;display:block;margin-top:14px;color:var(--teal);font-weight:600;text-decoration:none;font-size:14px;}
+body.dark .nav-home{color:var(--gold);}
+#confettiCanvas{position:fixed;inset:0;pointer-events:none;z-index:500;}
+.cert-btn{margin-top:14px;padding:12px 22px;background:transparent;border:2px solid var(--teal);color:var(--teal);border-radius:10px;font-weight:700;cursor:pointer;}
+body.dark .cert-btn{border-color:var(--gold);color:var(--gold);}
+.cert-form{margin-top:20px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.cert-form input{padding:12px 14px;border-radius:8px;border:2px solid rgba(0,0,0,.15);font-size:16px;min-width:200px;}
+body.dark .cert-form input{background:#132320;color:var(--ink);border-color:rgba(255,255,255,.2);}
+.certificate{display:none;margin:26px auto 0;max-width:520px;background:#fffdf7;color:#1f2a24;border:6px double var(--gold);border-radius:10px;padding:36px 30px;text-align:center;}
+.certificate h2{font-size:22px;color:var(--teal);margin-bottom:4px;}
+.certificate .cert-name{font-size:26px;margin:16px 0;color:var(--teal-dark);border-bottom:2px solid var(--gold);display:inline-block;padding-bottom:6px;}
+.certificate p{color:#555;font-size:14px;}
+.certificate .cert-date{margin-top:16px;font-size:13px;color:#888;}
+.print-btn{margin-top:16px;padding:12px 24px;background:var(--gold);color:var(--teal-dark);border:none;border-radius:10px;font-weight:700;cursor:pointer;}
+@media print{
+  body *{visibility:hidden;}
+  .certificate, .certificate *{visibility:visible;}
+  .certificate{display:block !important;position:fixed;top:10%;left:50%;transform:translateX(-50%);}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><i class="fa-solid fa-compass"></i><a href="index.html">SeniorSmart</a></div>
+  <div class="toolbar">
+    <button onclick="changeFont(-1)" aria-label="Decrease text size"><i class="fa-solid fa-minus"></i></button>
+    <button onclick="changeFont(1)" aria-label="Increase text size"><i class="fa-solid fa-plus"></i></button>
+    <button onclick="toggleDark()" aria-label="Toggle dark mode"><i class="fa-solid fa-moon"></i></button>
+  </div>
+</header>
+
+<main>
+  <h1 class="page-title">Quick Quiz</h1>
+  <p class="page-sub">Check what you've learned — there's no pressure, and no grades. Just tap an answer.</p>
+
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+  <div class="card" id="quizCard">
+    <p class="q-count" id="qCount">Question 1 of 8</p>
+    <p class="q-text" id="qText"></p>
+    <div id="options"></div>
+    <div class="feedback" id="feedback"></div>
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next question →</button>
+  </div>
+
+  <div class="card result hidden" id="resultCard">
+    <i class="fa-solid fa-trophy"></i>
+    <h2 id="resultTitle">Well done!</h2>
+    <p id="resultText">You got X out of 8 correct.</p>
+    <button class="restart-btn" onclick="restartQuiz()">Try again</button>
+    <br>
+    <button class="cert-btn" onclick="showCertForm()"><i class="fa-solid fa-award"></i> Get my certificate</button>
+
+    <div class="cert-form hidden" id="certForm">
+      <input type="text" id="certName" placeholder="Type your name">
+      <button class="restart-btn" onclick="generateCert()">Create</button>
+    </div>
+
+    <div class="certificate" id="certificate">
+      <i class="fa-solid fa-medal" style="font-size:40px;color:#c9922a;"></i>
+      <h2>Certificate of Achievement</h2>
+      <p>This certifies that</p>
+      <div class="cert-name" id="certNameOut">Your Name</div>
+      <p>has successfully completed the<br><strong>SeniorSmart Digital Literacy Training</strong><br>scoring <span id="certScore">8 / 8</span></p>
+      <p class="cert-date" id="certDate"></p>
+      <br>
+      <button class="print-btn" onclick="window.print()"><i class="fa-solid fa-print"></i> Print / Save as PDF</button>
+    </div>
+  </div>
+
+  <canvas id="confettiCanvas"></canvas>
+
+  <div class="nav-footer">
+    <a class="nav-link" href="safety.html"><small>← Previous</small><strong>Staying Safe Online</strong></a>
+  </div>
+  <a class="nav-home" href="index.html">All Topics</a>
+</main>
+
+<script>
+const questions = [
+  {q:"To turn on a smartphone, you should:", options:["Tap the power button once, quickly","Press and hold the power button for a few seconds","Shake the phone"], correct:1,
+   feedback:"Holding the power button for 2–3 seconds is what turns the phone on or off."},
+  {q:"On WhatsApp, which icon lets you start a new chat?", options:["A pencil or \"+\" button","The settings gear","The battery icon"], correct:0,
+   feedback:"The pencil or plus button opens your contact list so you can start chatting."},
+  {q:"To send a voice message on WhatsApp, you should:", options:["Type it and press send","Press and hold the microphone icon, then speak","Take a photo of yourself talking"], correct:1,
+   feedback:"Press and hold the microphone icon while you speak, then release to send."},
+  {q:"What is a UPI PIN used for?", options:["Unlocking your phone screen","Confirming a payment","Logging into WhatsApp"], correct:1,
+   feedback:"Your UPI PIN confirms a payment — it's separate from your phone lock and your ATM PIN."},
+  {q:"Someone calls saying your bank account will be blocked unless you share your OTP right now. You should:", options:["Share the OTP quickly so nothing goes wrong","Hang up and call your bank yourself using the number on your card","Ask them to call back later"], correct:1,
+   feedback:"No genuine bank will ever ask for your OTP over a call. Always hang up and call back using the number on your card."},
+  {q:"You never need to scan a QR code or enter your UPI PIN in order to:", options:["Pay for something","Receive money","Check your balance"], correct:1,
+   feedback:"Receiving money never requires scanning a code or entering your PIN — if someone asks you to do that to \"receive\" money, it's a scam."},
+  {q:"A message from an unknown number claims to be your grandchild urgently asking for money. The safest first step is to:", options:["Send the money immediately","Call your grandchild on their known number to check","Reply asking for more details in the same chat"], correct:1,
+   feedback:"Always verify by calling the person directly on a number you already know, before sending anything."},
+  {q:"Which of these is a good habit for staying safe online?", options:["Sharing your PIN with anyone who says they're from tech support","Setting a screen lock and never sharing OTPs","Clicking links in prize-winning messages"], correct:1,
+   feedback:"Setting a screen lock and keeping your PIN and OTP private are two of the simplest ways to stay safe."}
+];
+
+let current = 0;
+let score = 0;
+
+function loadQuestion(){
+  const q = questions[current];
+  document.getElementById('qCount').textContent = `Question ${current+1} of ${questions.length}`;
+  document.getElementById('qText').textContent = q.q;
+  document.getElementById('progressFill').style.width = (current/questions.length*100)+'%';
+  const optionsDiv = document.getElementById('options');
+  optionsDiv.innerHTML = '';
+  q.options.forEach((opt, i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.textContent = opt;
+    btn.onclick = ()=>selectAnswer(i);
+    optionsDiv.appendChild(btn);
+  });
+  document.getElementById('feedback').style.display = 'none';
+  document.getElementById('nextBtn').style.display = 'none';
+}
+
+function selectAnswer(i){
+  const q = questions[current];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach((btn, idx)=>{
+    btn.disabled = true;
+    if(idx === q.correct) btn.classList.add('correct');
+    else if(idx === i) btn.classList.add('incorrect');
+  });
+  if(i === q.correct) score++;
+  const fb = document.getElementById('feedback');
+  fb.textContent = q.feedback;
+  fb.style.display = 'block';
+  document.getElementById('nextBtn').style.display = 'block';
+  document.getElementById('nextBtn').textContent = current === questions.length-1 ? 'See my result →' : 'Next question →';
+}
+
+function nextQuestion(){
+  current++;
+  if(current >= questions.length){
+    showResult();
+  } else {
+    loadQuestion();
+  }
+}
+
+function showResult(){
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('quizCard').classList.add('hidden');
+  document.getElementById('resultCard').classList.remove('hidden');
+  document.getElementById('resultText').textContent = `You got ${score} out of ${questions.length} correct.`;
+  document.getElementById('certScore').textContent = `${score} / ${questions.length}`;
+  const title = document.getElementById('resultTitle');
+  if(score === questions.length) title.textContent = "Perfect score!";
+  else if(score >= questions.length*0.6) title.textContent = "Well done!";
+  else title.textContent = "Good start — keep practicing!";
+  localStorage.setItem('ss_done_quiz', 'true');
+  launchConfetti();
+}
+
+function showCertForm(){
+  document.getElementById('certForm').classList.remove('hidden');
+}
+
+function generateCert(){
+  const name = document.getElementById('certName').value.trim() || 'SeniorSmart Learner';
+  document.getElementById('certNameOut').textContent = name;
+  document.getElementById('certDate').textContent = 'Completed on ' + new Date().toLocaleDateString('en-IN', {day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('certificate').style.display = 'block';
+  document.getElementById('certificate').scrollIntoView({behavior:'smooth'});
+}
+
+function launchConfetti(){
+  const canvas = document.getElementById('confettiCanvas');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  const ctx = canvas.getContext('2d');
+  const colors = ['#c9922a','#22515a','#2f7d4f','#fdf9ef'];
+  let pieces = Array.from({length:120}, ()=>({
+    x: Math.random()*canvas.width, y: -20 - Math.random()*canvas.height*0.5,
+    r: 4+Math.random()*5, c: colors[Math.floor(Math.random()*colors.length)],
+    speed: 2+Math.random()*3, drift: (Math.random()-0.5)*2, rot: Math.random()*360
+  }));
+  let frame = 0;
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p=>{
+      p.y += p.speed; p.x += p.drift; p.rot += 4;
+      ctx.save();
+      ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.6);
+      ctx.restore();
+    });
+    frame++;
+    if(frame < 150) requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  draw();
+}
+
+function restartQuiz(){
+  current = 0; score = 0;
+  document.getElementById('resultCard').classList.add('hidden');
+  document.getElementById('quizCard').classList.remove('hidden');
+  loadQuestion();
+}
+
+let fontStep = 0;
+function changeFont(dir){
+  fontStep = Math.max(-2, Math.min(4, fontStep+dir));
+  document.documentElement.style.setProperty('--fs', (18+fontStep*2)+'px');
+}
+function toggleDark(){
+  document.body.classList.toggle('dark');
+  localStorage.setItem('ss_dark', document.body.classList.contains('dark'));
+}
+window.addEventListener('load', ()=>{
+  if(localStorage.getItem('ss_dark')==='true') document.body.classList.add('dark');
+  loadQuestion();
+});
+</script>
+</body>
+</html>
